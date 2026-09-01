@@ -11,20 +11,23 @@ class RegisteredUserController extends Controller
     public function create(){
         return view('auth.register');
     }
-
-    public function Store( Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'name'=> ['requires','string','min:3','max:255'],
-            'email' => ['required','string','email','max:255'],
-            'password' => ['required','string','password','min:3'],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:3'],
         ]);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => bcrypt($request->password),
         ]);
+
         auth()->login($user);
+
         return redirect('/')->with('success', 'Registration Successful!');
     }
+
 }

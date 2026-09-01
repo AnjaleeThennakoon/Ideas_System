@@ -4,14 +4,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegisteredUserController;
-use App\Http\Controllers\SessionsController;
+
 
 
 
 Route::get('/', fn  () =>view('welcome'));
 
-Route::get('/register',[RegisteredUserController::class,'create']);
-Route::get( '/login',[SessionsController::class,'create']);
+Route::get('/register',[RegisteredUserController::class,'create'])->middleware('guest');
+Route::post('/register',[RegisteredUserController::class,'store'])->middleware('guest');
+
+Route::get( '/login',[SessionsController::class,'create'])->middleware('guest');
+Route::post('/login',[SessionsController::class,'store'])->middleware('guest');
+
+Route::post('/logout',[SessionsController::class,'destroy'])->middleware('auth');
 
 

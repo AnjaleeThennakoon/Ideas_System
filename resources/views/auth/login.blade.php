@@ -3,7 +3,7 @@
         <form action="/login" method="POST" class="mt-10 space-y-4" >
             @csrf
 
-            <x-form.field name="name" label="Name" />
+
             <x-form.field name="email" label="Email" />
             <x-form.field name="password" label="Password" />
 
