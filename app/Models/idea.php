@@ -27,7 +27,7 @@ class idea extends Model
     }
     public function steps():HasMany
     {
-        return $this->hasmany(step::class);
+        return $this->hasmany(Step::class);
     }
 }
 
