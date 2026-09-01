@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Idea</title>
     @vite('resources/css/app.css')
 </head>
@@ -10,7 +10,7 @@
 
  <x-layout.nav/>
 
-    <main class="max-w-7xl mx-auto px-6 py-10">
+    <main class="max-w-7xl mx-auto px-6 py-6">
 
         {{ $slot }}
     </main>
