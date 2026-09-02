@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\idea;
+use App\Models\Idea;
 use App\Models\Step;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

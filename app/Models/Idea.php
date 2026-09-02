@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class idea extends Model
+class Idea extends Model
 {
     /** @use HasFactory<\Database\Factories\IdeaFactory> */
     use HasFactory;

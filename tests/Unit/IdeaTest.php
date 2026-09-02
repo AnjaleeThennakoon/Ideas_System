@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\idea;
+use App\Models\Idea;
 use App\Models\Step;
 use App\Models\user;
 use Illuminate\Support\Collection as SupportCollection;
