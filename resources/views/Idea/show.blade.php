@@ -7,7 +7,7 @@
 
             <div class="gap-x-3 flex items-center">
                 <button class=" btn btn-outlined ">
-                    <x-icons.external />
+{{--                    <x-icons.external />--}}
 
                     Edit Idea
                 </button>
@@ -16,17 +16,43 @@
                     @csrf
                     @method('DELETE')
 
-                    <button class="btn btn-outlined text-red-500"> Delete</button>
+                    <button class="btn btn-outlined !text-rose-500">Delete</button>
 
                 </form>
+
             </div>
         </div>
 
+        <div class="mt-8 space-y-6">
+            <h1 class="font-bold text-4xl">{{ $idea->title }}</h1>
 
-        <h1 class="font-blod text-4xl">{{ $idea->title }}</h1>
+            <div class="mt-2 flex gap-x-3 items-center">
+                <x-idea.status-label :status="$idea->status->value">
+                    {{ $idea->status->label() }}
+                </x-idea.status-label>
 
-        <x-card class="mt-6">
+                <div class="text-muted-foreground text-sm">{{ $idea->created_at ->diffForHumans() }}</div>
+            </div>
+        </div>
+
+        <div class="mt-8 space-y-6">
             <div class="text-foreground max-w-none cursor-pointer">{{ $idea->description }}</div>
-        </x-card>
+
+        </div>
+
+
+
+        @if($idea->links !== null && $idea->links->count() > 0)
+            <h3 class="font-bold text-xl mt-6">Link</h3>
+
+            <div class="mt-3">
+                @foreach($idea->links  as $link)
+                    <x-card :href="$link" class="text-primary font-medium flex gap-x-3 items-center">
+                       <x-icons.external/>
+                        {{ $link }}
+                    </x-card>
+                @endforeach
+            </div>
+        @endif
     </div>
 </x-layout>
