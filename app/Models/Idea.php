@@ -15,8 +15,10 @@ class Idea extends Model
 
     protected $casts = [
         'links' =>AsArrayObject::class,
-        'status'=>IdeaStatus::class
+        'status'=>IdeaStatus::class   //do Enum status in db
     ];
+
+
     protected $attributes = [
         'status'=>IdeaStatus::PENDING,
     ];
@@ -25,6 +27,7 @@ class Idea extends Model
     {
         return $this ->belongsTo(User::class);
     }
+
     public function steps():HasMany
     {
         return $this->hasmany(Step::class);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 enum  IdeaStatus: string
 {
+    //define rules for status   -php enum(only 3 idea )
     case PENDING = "pending";
     case IN_PROGRESS = "in_progress";
     case COMPLETED = "completed";
