@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-
 class RegisteredUserController extends Controller
 {
-    public function create(){
+    public function create()
+    {
         return view('auth.register');
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -29,5 +30,4 @@ class RegisteredUserController extends Controller
 
         return redirect('/')->with('success', 'Registration Successful!');
     }
-
 }

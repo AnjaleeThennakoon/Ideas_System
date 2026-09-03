@@ -1,12 +1,11 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
-it('Log in a user', function () {
+it('Log in a user', function (): void {
     visit('/login')
 
-        ->fill('email','john@example.com')
+        ->fill('email', 'john@example.com')
         ->fill('password', 'password123!@#')
         ->click('@login-button')
         ->assertPathIs('/');
@@ -14,8 +13,8 @@ it('Log in a user', function () {
     $this->assertAuthenticated();
 });
 
-it('Log out a user', function () {
-    $user=User::factory()->create();
+it('Log out a user', function (): void {
+    $user = User::factory()->create();
 
     $this->actingAs($user);
 
