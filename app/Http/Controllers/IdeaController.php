@@ -51,14 +51,24 @@ class IdeaController extends Controller
      */
     public function store(StoreideaRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $data['links'] = $request->filled('links')
+            ? [$request->links]
+            : [];
+
+        $idea = $request->user()->ideas()->create($data);
+
+        return redirect()->route('idea.show', $idea);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Idea $idea)
+
     {
+
         return view('idea.show', [
             'idea' => $idea,
         ]);

@@ -16,7 +16,7 @@ class Idea extends Model
     use HasFactory;
 
     protected $casts = [
-        'links' => AsArrayObject::class,
+        'links' => 'array',
         'status' => IdeaStatus::class,   // do Enum status in db
     ];
 
