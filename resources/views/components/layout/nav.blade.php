@@ -9,9 +9,10 @@
 
             <div class="flex gap-x-5">
                 @auth
-                    <form method="POST" action="/logout"
-                    @csrf
-                    <button>Log Out </button>
+                    <form method="POST" action="/logout">
+                        @csrf
+                        <button type="submit">Log Out</button>
+                    </form>
 
                 @endauth
 

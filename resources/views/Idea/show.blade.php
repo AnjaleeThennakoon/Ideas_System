@@ -44,14 +44,26 @@
         </div>
 
 
-        @if($idea->links)
+        @php
+            $links = is_array($idea->links) ? $idea->links : ($idea->links ? [$idea->links] : []);
+            $links = array_filter($links, fn ($link) => is_string($link) && filled($link));
+        @endphp
+
+        @if($links)
             <h3 class="font-bold text-xl mt-6">Link</h3>
 
             <div class="mt-3 space-y-2">
-                <x-card :href="$idea->links" class="text-primary font-medium flex gap-x-3 items-center">
-                    <x-icons.external class="w-5 h-5 shrink-0" />
-                    {{ $idea->links }}
-                </x-card>
+                @foreach($links as $link)
+                    <x-card
+                        :href="$link"
+                        class="text-primary font-medium flex gap-x-3 items-center"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <x-icons.external class="w-5 h-5 shrink-0" />
+                        <span class="break-all">{{ $link }}</span>
+                    </x-card>
+                @endforeach
             </div>
         @endif
     </div>

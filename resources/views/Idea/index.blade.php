@@ -2,9 +2,18 @@
     <div >
         <header class="py-8 md:py-12">
             <h1 class="text-3xl font-bold">
-                Idea
+                Ideas
             </h1>
             <p class="text-muted-foreground text-sm mt-2">Capture your thoughts.make a plan.</p>
+
+
+            <x-card
+                x-data
+                @click="$dispatch('open-model','create-idea')"
+{{--                is="button"--}}
+                class="mt-10 cursor-pointer h-32 w-full text-left" >
+                <p>What's the idea ?</p>
+            </x-card>
         </header>
 
 
@@ -49,6 +58,31 @@
             </div>
 
         </div>
+        <!--model -->
+        <div
+            x-data="{show:false,name:'create-idea'}"
+            x-show="show"
+            @open-model.window="if($event.detail === name)show = true;"
+            @keydown.escape.window ="show =false"
 
+            x-transition:enter="ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-4 -translate-x-4"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0 -translate-y-4 -translate-x-4"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs"
+            style="display:none"
+            role="dialog"
+            aria-modal="true"
+            aria-label="create a new idea"
+            :aria-hidden="!show"
+            tabindex="-1"
+
+        >
+            <x-card @click.away="show = false">
+                <p>I am a model</p>
+            </x-card>
+        </div>
     </div>
 </x-layout>
