@@ -14,7 +14,6 @@ class IdeaController extends Controller
     /**
      * Display a listing of the resource.
      */
-
     public function index(Request $request)
     {
 
@@ -22,7 +21,8 @@ class IdeaController extends Controller
 
         $ideas = $user
             ->ideas()
-            ->when(in_array($request->status,IdeaStatus::values()),fn ($query) => $query->where('status', $request->status))
+            ->when(in_array($request->status, IdeaStatus::values()), fn ($query) => $query->where('status', $request->status))
+            ->latest()
             ->get();
 
         return view('idea.index', [
@@ -42,25 +42,18 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreideaRequest $request):void
+    public function store(StoreideaRequest $request)
     {
-        dd('persist the idea');
-//        $data = $request->validated();
-//
-//        $data['links'] = $request->filled('links')
-//            ? [$request->links]
-//            : [];
-//
-//        $idea = $request->user()->ideas()->create($data);
-//
-//        return redirect()->route('idea.show', $idea);
+        Auth::user()->ideas()->create($request->validated());
+
+        return to_route('idea.index')
+            ->with('success','idea created');
     }
 
     /**
      * Display the specified resource.
      */
     public function show(Idea $idea)
-
     {
 
         return view('idea.show', [

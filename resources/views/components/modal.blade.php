@@ -3,6 +3,7 @@
     x-data="{show:false,name:@js($name)}"
     x-show="show"
     @open-modal.window="if($event.detail=== '{{ $name }}')show = true;"
+    @close-modal="alert('close')"
     @keydown.escape.window ="show =false"
 
     x-transition:enter="ease-out duration-200"

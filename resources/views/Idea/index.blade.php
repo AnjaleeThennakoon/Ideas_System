@@ -68,6 +68,7 @@
                        name="title"
                        placeholder="Enter an idea for you title"
                        autofocus
+                       required
                    />
                    <div class="space-y-2">
                        <label for="status" class="label">Status </label>
@@ -86,9 +87,8 @@
                            <input type="hidden" name="status"  :value="status" class="input">
                        </div>
 
-                       @error('$status')
-                            <p class="error"> {{ $message }}</p>
-                       @enderror
+                       <x-form.error name="status"/>
+
                    </div>
                    <x-form.field
                        label="description"
@@ -97,7 +97,12 @@
                        placeholder="Enter an idea for you idea"
                    />
 
-                   <button type="submit" class="btn">Create Idea</button>
+                   <div class="flex justify-end gap-x-5">
+                       <button type="button" @click="$dispatch('close-model')">Cancel </button>
+                       <button type="submit" class="btn" >Create </button>
+
+                   </div>
+
                </div>
            </form>
        </x-modal>
