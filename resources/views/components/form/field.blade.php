@@ -6,13 +6,14 @@
     @endif
 
     @if($type === 'textarea')
-
         <textarea
             name="{{ $name }}"
             id="{{ $name }}"
             class="textarea "
             {{ $attributes }}
-        >{{ old($name) }}</textarea>
+        >
+            {{ old($name) }}
+        </textarea>
         @else
         <input
             type="{{ $type }}"

@@ -1,5 +1,5 @@
 <x-layout>
-    <div >
+    <div>
         <header class="py-8 md:py-12">
             <h1 class="text-3xl font-bold">
                 Ideas
@@ -9,8 +9,10 @@
 
             <x-card
                 x-data
-                @click="$dispatch('open-modal','create-idea')"
-{{--                is="button"--}}
+                @click="$dispatch('open-modal', 'create-idea')"
+                is="button"
+                type="button"
+                data-test="create-idea-button"
                 class="mt-10 cursor-pointer h-32 w-full text-left" >
                 <p>What's the idea ?</p>
             </x-card>
@@ -78,6 +80,7 @@
 
                                <button type="button"
                                        @click="status=@js($status->value)"
+                                       data-test="button-status-{{ $status->value }}"
                                        class ="btn flex-1 h-10"
                                        :class="status === @js($status->value) ? '' : 'btn-outlined'">
                                    {{ $status->label() }}
@@ -99,7 +102,8 @@
 
                    <div class="flex justify-end gap-x-5">
                        <button type="button" @click="$dispatch('close-model')">Cancel </button>
-                       <button type="submit" class="btn" >Create </button>
+                       <button type="submit" class="btn"
+                       >Create </button>
 
                    </div>
 
@@ -109,3 +113,4 @@
 
     </div>
 </x-layout>
+
