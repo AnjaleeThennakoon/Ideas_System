@@ -62,9 +62,17 @@
         </div>
         <!--model -->
        <x-modal name="create-idea" title="New Idea" >
-           <form x-data="{status:'pending'}" method="POST" action="{{ route('idea.store') }}">
+           <form
+               x-data="{
+                    status:'pending',
+                    newLink: '',
+                    links:[]
+                }"
+               method="POST"
+               action="{{ route('idea.store') }}"
+           >
                @csrf
-               <div class="space-y-6 ">
+               <div class="space-y-6  ">
                    <x-form.field
                        label="Title"
                        name="title"
@@ -97,8 +105,38 @@
                        label="description"
                        name="description"
                        type="textarea"
-                       placeholder="Enter an idea for you idea"
+                       placeholder="Enter an idea for you idea..."
                    />
+
+                  <div>
+                      <fieldset  class="space-y-3">
+                          <legent class="label">Links</legent>
+
+                          <div class="flex gap-x-2 items-center">
+                              <input
+                                  x-model="newLink"
+                                  type="url"
+                                  id="new-link"
+                                  placeholder="http:example.com"
+                                  autocomplete="url"
+                                  class="input flex-1"
+                                  spellcheck="false"
+                              >
+
+                              <button type="button" @click="links.push(newLink)">
+                                  <x-icons.close class="rotate-45"/>
+
+                              </button>
+                          </div>
+{{--                          <pre x-text="newLink">--}}
+
+{{--                          </pre>--}}
+
+                          <pre x-text="JSON.stringify(links)">
+
+                          </pre>
+                      </fieldset>
+                  </div>
 
                    <div class="flex justify-end gap-x-5">
                        <button type="button" @click="$dispatch('close-model')">Cancel </button>
