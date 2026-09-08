@@ -60,7 +60,37 @@
         </div>
         <!--model -->
        <x-modal name="create-idea" title="New Idea" >
-           <p>Slot Content hear.  </p>
+           <form method="POST" action="{{ route('idea.store') }}">
+               @csrf
+               <div class="space-y-6 ">
+                   <x-form.field
+                       label="Title"
+                       name="title"
+                       placeholder="Enter an idea for you title"
+                       autofocus
+                   />
+                   <div>
+                       <label for="status" class="label">Status </label>
+                       <div class="flex gap-3">
+                           @foreach( \App\Models\IdeaStatus::cases() as $status)
+
+                               <button class="btn flex-1 h-10">
+                                   {{ $status->label() }}
+                               </button>
+                           @endforeach
+                       </div>
+                   </div>
+                   <x-form.field
+                       label="description"
+                       name="description"
+                       type="textarea"
+                       placeholder="Enter an idea for you idea"
+                   />
+
+                   <button type="submit" class="btn">Create Idea</button>
+               </div>
+           </form>
        </x-modal>
+
     </div>
 </x-layout>

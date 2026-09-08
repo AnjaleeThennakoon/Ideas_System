@@ -1,8 +1,8 @@
-@props(['name', 'title'])
+@props(['name', 'title' =>''])
 <div
     x-data="{show:false,name:@js($name)}"
     x-show="show"
-    @open-modal.window="if($event.detail === name)show = true;"
+    @open-modal.window="if($event.detail=== '{{ $name }}')show = true;"
     @keydown.escape.window ="show =false"
 
     x-transition:enter="ease-out duration-200"
@@ -20,12 +20,16 @@
     tabindex="-1"
 
 >
-    <x-card @click.away="show = false">
-        <div>
+    <x-card @click.away="show = false" class="shadow-xl max-w-2xl w-full max-h-[80dvh] overflow-auto">
+        <div class="flex justify-between items-center">
             <h2 id="modal-{{ $name }}-title" class="text-xl font-bold">{{ $title }}</h2>
+
+            <button @click="show = false" aria-label="close modal" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <x-icons.close class="w-5 h-5"/>
+            </button>
         </div>
 
-        <div>
+        <div class="mt-4">
             {{ $slot }}
         </div>
     </x-card>
