@@ -60,7 +60,7 @@
         </div>
         <!--model -->
        <x-modal name="create-idea" title="New Idea" >
-           <form method="POST" action="{{ route('idea.store') }}">
+           <form x-data="{status:'pending'}" method="POST" action="{{ route('idea.store') }}">
                @csrf
                <div class="space-y-6 ">
                    <x-form.field
@@ -69,16 +69,26 @@
                        placeholder="Enter an idea for you title"
                        autofocus
                    />
-                   <div>
+                   <div class="space-y-2">
                        <label for="status" class="label">Status </label>
+
                        <div class="flex gap-3">
                            @foreach( \App\Models\IdeaStatus::cases() as $status)
 
-                               <button class="btn flex-1 h-10">
+                               <button type="button"
+                                       @click="status=@js($status->value)"
+                                       class ="btn flex-1 h-10"
+                                       :class="status === @js($status->value) ? '' : 'btn-outlined'">
                                    {{ $status->label() }}
                                </button>
+
                            @endforeach
+                           <input type="hidden" name="status"  :value="status" class="input">
                        </div>
+
+                       @error('$status')
+                            <p class="error"> {{ $message }}</p>
+                       @enderror
                    </div>
                    <x-form.field
                        label="description"
