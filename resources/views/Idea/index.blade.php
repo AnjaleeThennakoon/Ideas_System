@@ -20,25 +20,20 @@
 
 
         <div>
-
             <a href="/ideas" class="btn {{ request()->has('status') ? 'btn-outlined' : '' }}">All</a>
-
             @foreach (App\Models\IdeaStatus::cases() as $status)
                 <a
                     href="/ideas?status={{ $status->value }}"
-                    class="btn {{ request('status') === $status->value ? '' : 'btn-outlined' }}"
-                >
+                    class="btn {{ request('status') === $status->value ? '' : 'btn-outlined' }}">
                     {{ $status->label() }} <span class="text-xs pl-3"> {{ $statusCounts->get($status->value) }}</span>
                 </a>
             @endforeach
-
         </div>
+
 
         <div class="mt-10 text-muted-foreground">
             <div class="grid md:grid-cols-2 gap-6" >
-
                 @forelse($ideas as $idea)
-
                     <x-card href="{{ route('idea.show', $idea) }}">
                         <h3 class="text-foreground text-lg">{{ $idea->title }}</h3>
                         <div class="mt-1">
@@ -46,31 +41,30 @@
                                 {{ $idea->status->label() }}
                             </x-idea.status-label>
                         </div>
-
                         <div class="mt-5 line-clamp-3">{{ $idea->description }}</div>
                         <div class="mt-4">{{ $idea->created_at->diffForHumans() }}</div>
                     </x-card>
-
                 @empty
                     <x-card>
                         <p>No ideas at the time</p>
                     </x-card>
                 @endforelse
-
             </div>
-
         </div>
+
+
         <!--model -->
        <x-modal name="create-idea" title="New Idea" >
            <form
                x-data="{
                     status:'pending',
                     newLink: '',
-                    links:[]
+                    links:[],
+                    newStep:'',
+                    steps:[]
                 }"
                method="POST"
-               action="{{ route('idea.store') }}"
-           >
+               action="{{ route('idea.store') }}">
                @csrf
                <div class="space-y-6  ">
                    <x-form.field
@@ -80,12 +74,12 @@
                        autofocus
                        required
                    />
+
+
                    <div class="space-y-2">
                        <label for="status" class="label">Status </label>
-
                        <div class="flex gap-3">
                            @foreach( \App\Models\IdeaStatus::cases() as $status)
-
                                <button type="button"
                                        @click="status=@js($status->value)"
                                        data-test="button-status-{{ $status->value }}"
@@ -93,14 +87,13 @@
                                        :class="status === @js($status->value) ? '' : 'btn-outlined'">
                                    {{ $status->label() }}
                                </button>
-
                            @endforeach
                            <input type="hidden" name="status"  :value="status" class="input">
                        </div>
-
                        <x-form.error name="status"/>
-
                    </div>
+
+
                    <x-form.field
                        label="description"
                        name="description"
@@ -108,33 +101,90 @@
                        placeholder="Enter an idea for you idea..."
                    />
 
+                   <div>
+                       <fieldset  class="space-y-3">
+                           <legend class="label">Actionable Steps</legend>
+                           <form method="POST" action="">
+                               @csrf
+                               @method('PATCH')
+
+                               <template x-for="(step, index) in steps" :key="index">
+                                   <div class="flex gap-x-2 items-center">
+                                       <input name="steps[]" x-model="steps[index]" class="input">
+                                       <button
+                                           type="button"
+                                           aria-label="Remove step"
+                                           @click ="steps.splice(index,1)"
+                                           class="form-muted-icon">
+                                           <x-icons.close />
+                                       </button>
+                                   </div>
+                               </template>
+
+                           </form>
+
+
+                           <div class="flex gap-x-2 items-center">
+                               <input
+                                   x-model="newStep"
+                                   id="new-step"
+                                   data-test="new-step"
+                                   placeholder="what needs to be done?"
+                                   class="input flex-1"
+                                   spellcheck="false">
+                               <button
+                                   type="button"
+                                   @click="steps.push(newStep.trim()); newStep = '';"
+                                   data-test="submit-new-step-button"
+                                   :disabled="newStep.trim().length === 0"
+                                   aria-label="Add a new step"
+                                   class="form-muted-icon">
+                                   <x-icons.close class="rotate-45"/>
+                               </button>
+                           </div>
+                       </fieldset>
+                   </div>
+
+
                   <div>
                       <fieldset  class="space-y-3">
-                          <legent class="label">Links</legent>
+                          <legend class="label">Links</legend>
+
+
+                          <template x-for="(link,index) in links" :key="link">
+                              <div class="flex gap-x-2 items-center">
+                                  <label for="" class="sr-only" >Link</label>
+                                  <input  name="links[]" x-model="link" class="input">
+                                  <button
+                                      type="button"
+                                      aria-label="Remove Link"
+                                      @click ="links.splice(index,1)"
+                                      class="form-muted-icon">
+                                      <x-icons.close />
+                                  </button>
+                              </div>
+                          </template>
 
                           <div class="flex gap-x-2 items-center">
                               <input
                                   x-model="newLink"
                                   type="url"
                                   id="new-link"
+                                  data-test="new-link"
                                   placeholder="http:example.com"
                                   autocomplete="url"
                                   class="input flex-1"
-                                  spellcheck="false"
-                              >
-
-                              <button type="button" @click="links.push(newLink)">
+                                  spellcheck="false">
+                              <button
+                                  type="button"
+                                  @click="links.push(newLink.trim()); newLink = '';"
+                                  data-test="submit-new-link-button"
+                                  :disabled="newLink.trim().length === 0"
+                                  aria-label="Add a new Link"
+                                  class="form-muted-icon">
                                   <x-icons.close class="rotate-45"/>
-
                               </button>
                           </div>
-{{--                          <pre x-text="newLink">--}}
-
-{{--                          </pre>--}}
-
-                          <pre x-text="JSON.stringify(links)">
-
-                          </pre>
                       </fieldset>
                   </div>
 
@@ -151,4 +201,3 @@
 
     </div>
 </x-layout>
-

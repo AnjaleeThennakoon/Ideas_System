@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\IdeaStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
 class StoreideaRequest extends FormRequest
 {
@@ -27,8 +27,11 @@ class StoreideaRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['required',
-                new Enum(IdeaStatus::class)],
+            'status' => ['required', Rule::enum(IdeaStatus::class)],
+            'links' => ['nullable', 'array'],
+            'links.*' => ['url', 'max:255'],
+            'steps' => ['nullable', 'array'],
+            'steps.*' => ['required', 'string', 'max:255'],
 
         ];
     }
