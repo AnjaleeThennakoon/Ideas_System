@@ -5,6 +5,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+declare(strict_types=1);
+
 return new class extends Migration
 {
     /**
@@ -19,7 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('status')->default('pending');
             $table->string('image_path')->nullable();
-            $table->json('links')->nullable();
+            $table->json('links')->default('{}');
             $table->timestamps();
         });
     }

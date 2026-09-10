@@ -44,22 +44,34 @@ class IdeaController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(StoreideaRequest $request)
+    //    {
+    //        $data = $request->validated();
+    //        $steps = $data['steps'] ?? [];
+    //        unset($data['steps']);
+    //
+    //        DB::transaction(function () use ($request, $data, $steps): void {
+    //            $idea = $request->user()->ideas()->create($data);
+    //            $idea->steps()->createMany(
+    //                collect($steps)
+    //                    ->map(fn (string $description): array => ['description' => $description])
+    //                    ->all()
+    //            );
+    //        });
+    //
+    //        return to_route('idea.index')
+    //            ->with('success', 'idea created');
+    //    }
     {
-        $data = $request->validated();
-        $steps = $data['steps'] ?? [];
-        unset($data['steps']);
+        $idea = Auth::user()->ideas()->create($request->safe()->except(['steps', 'image']));
+        $idea->steps()->createMany(
+            collect($request->step)->map(fn ($step) => ['description' => $step])
+        );
+        $imagPath = $request->image->store('ideas', 'public');
+        $idea->update([
+            'image_path' => $imagPath,
+        ]);
 
-        DB::transaction(function () use ($request, $data, $steps): void {
-            $idea = $request->user()->ideas()->create($data);
-            $idea->steps()->createMany(
-                collect($steps)
-                    ->map(fn (string $description): array => ['description' => $description])
-                    ->all()
-            );
-        });
-
-        return to_route('idea.index')
-            ->with('success', 'idea created');
+        return to_route('idea.index')->with('success', 'Idea created!');
     }
 
     /**

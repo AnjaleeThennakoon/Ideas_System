@@ -64,7 +64,8 @@
                     steps:[]
                 }"
                method="POST"
-               action="{{ route('idea.store') }}">
+               action="{{ route('idea.store') }}"
+                enctype="multipart/form-data">
                @csrf
                <div class="space-y-6  ">
                    <x-form.field
@@ -75,7 +76,7 @@
                        required
                    />
 
-
+                    {{--Status cases 3--}}
                    <div class="space-y-2">
                        <label for="status" class="label">Status </label>
                        <div class="flex gap-3">
@@ -93,7 +94,7 @@
                        <x-form.error name="status"/>
                    </div>
 
-
+                    {{--description--}}
                    <x-form.field
                        label="description"
                        name="description"
@@ -101,12 +102,18 @@
                        placeholder="Enter an idea for you idea..."
                    />
 
+                    {{--choose file--}}
+                   <div class="space-y-2">
+                       <label for="image" class="label">Featured Image</label>
+                       <input type="file" name="image" accept="image/*">
+                       <x-form.error name="image"/>
+
+                   </div>
+
                    <div>
                        <fieldset  class="space-y-3">
                            <legend class="label">Actionable Steps</legend>
-                           <form method="POST" action="">
-                               @csrf
-                               @method('PATCH')
+
 
                                <template x-for="(step, index) in steps" :key="index">
                                    <div class="flex gap-x-2 items-center">
@@ -121,7 +128,7 @@
                                    </div>
                                </template>
 
-                           </form>
+
 
 
                            <div class="flex gap-x-2 items-center">

@@ -12,6 +12,8 @@ class StoreideaRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
+
+    //    Authorize
     public function authorize(): bool
     {
         return true;
@@ -22,6 +24,8 @@ class StoreideaRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
+
+    // validation rules
     public function rules(): array
     {
         return [
@@ -31,7 +35,8 @@ class StoreideaRequest extends FormRequest
             'links' => ['nullable', 'array'],
             'links.*' => ['url', 'max:255'],
             'steps' => ['nullable', 'array'],
-            'steps.*' => ['required', 'string', 'max:255'],
+            'steps.*' => ['string', 'max:255'],
+            'image' => ['nullable', 'image', 'max:5120'],
 
         ];
     }
