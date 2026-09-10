@@ -14,6 +14,8 @@ it('create a new idea', function () {
         ->fill('description', 'An example description')
         ->fill('@new-link', 'https://laracasts.com')
         ->click('@submit-new-link-button')
+        ->fill('@new-link', 'https://laravel.com')
+        ->click('@submit-new-link-button')
         ->debug()
         ->click('Create')
         ->assertPathIs('/ideas');
