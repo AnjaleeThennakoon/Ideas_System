@@ -74,7 +74,11 @@
                     </div>
                 @endif
 
-                <input type="file" name="image" accept="image/*">
+
+
+                <button type="submit" class="btn" dusk="submit-idea">
+                    <input type="file" name="image" accept="image/*">
+                </button>
                 <x-form.error name="image"/>
             </div>
 

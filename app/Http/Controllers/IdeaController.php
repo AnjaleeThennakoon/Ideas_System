@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Actions\CreateIdea\CreateIdea;
-use App\Http\Requests\StoreideaRequest;
+use App\Http\Requests\IdeaRequest;
 use App\Http\Requests\UpdateideaRequest;
 use App\Models\Idea;
 use App\Models\IdeaStatus;
@@ -45,7 +45,7 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreideaRequest $request, CreateIdea $action)
+    public function store(IdeaRequest $request, CreateIdea $action)
     {
 
         $action->handle($request->safe()->all());

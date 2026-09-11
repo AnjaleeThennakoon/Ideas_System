@@ -18,7 +18,9 @@ Route::get('/ideas/{idea}', [IdeaController::class, 'show'])
     ->can('workWith', 'idea');
 
 Route::put('/ideas/{idea}', [IdeaController::class, 'update'])->name('idea.update');
-Route::patch('/steps/{step}', [StepController::class, 'update'])->name('step.update')->middleware('auth','can:workWith.idea');
+Route::patch('/steps/{step}', [StepController::class, 'update'])
+    ->name('step.update')
+    ->middleware('auth');
 
 Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('idea.show')->middleware('auth');
 Route::delete('/ideas/{idea}', [IdeaController::class, 'destroy'])->name('idea.destroy')->middleware('auth');
