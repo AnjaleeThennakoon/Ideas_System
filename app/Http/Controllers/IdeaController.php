@@ -7,6 +7,7 @@ use App\Http\Requests\StoreideaRequest;
 use App\Http\Requests\UpdateideaRequest;
 use App\Models\Idea;
 use App\Models\IdeaStatus;
+use Illuminate\Support\Facades\Gate;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,9 +69,8 @@ class IdeaController extends Controller
      */
     public function edit(Idea $idea)
     {
-        return view('idea.edit', [
-            'idea' => $idea,
-        ]);
+        Gate::authorize('workWith', $idea);
+
     }
 
     /**
@@ -78,7 +78,8 @@ class IdeaController extends Controller
      */
     public function update(UpdateideaRequest $request, Idea $idea)
     {
-        //
+        Gate::authorize('workWith', $idea);
+
     }
 
     /**
@@ -86,8 +87,11 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
+        Gate::authorize('workWith', $idea);
+
         $idea->delete();
 
-        return redirect()->route('idea.index');
+        return to_route('idea.index');
+
     }
 }

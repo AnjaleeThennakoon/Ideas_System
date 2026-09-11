@@ -4,12 +4,19 @@
             <a href="{{ route('idea.index') }}" class="flex items-center gap-x-2 text-sm font-medium">
                 <x-icons.arrow-back/>
                 Back to ideas</a>
-            <div class="gap-x-3 flex items-center">
 
-{{--                    <x-icons.external />--}}
-                    <a href="{{ route('idea.edit', ['idea' => $idea->id]) }}" class="btn btn-outlined">
+{{--            edit idea--}}
+            <div class="gap-x-3 flex items-center">
+                <button
+                        x-data
+                        class="btn btn-outlined"
+                        data-test="edit-idea-button"
+                        @click="$dispatch('open-modal', 'edit-idea')">
+                    <x-icons.external />
                         Edit Idea
-                    </a>
+                </button>
+
+
 
                 <form method="Post" action="{{ route('idea.destroy',$idea) }}">
                     @csrf
@@ -96,5 +103,7 @@
                 </div>
             </div>
         @endif
+        <x-idea.model :idea="$idea" />
+
     </div>
 </x-layout>
