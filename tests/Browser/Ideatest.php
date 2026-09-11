@@ -16,16 +16,23 @@ it('create a new idea', function () {
         ->click('@submit-new-link-button')
         ->fill('@new-link', 'https://laravel.com')
         ->click('@submit-new-link-button')
-        ->debug()
+        ->fill('@new-step', 'Do a Thnig')
+        ->click('@submit-new-step-button')
+        ->click('@new-step','Do another Thing')
+        ->click('@submit-new-step-button')
+        //push the test and run browser
+//        ->debug()
         ->click('Create')
+        // check after submitting redirect /ideas page
         ->assertPathIs('/ideas');
 
     // Test - Match the first idea ?
-    expect($user->ideas()->first())->toMatchArray([
+    expect($idea = $user->ideas()->first())->toMatchArray([
         'title' => 'Some Example Title',
         'status' => 'Completed',
         'description' => 'An example description',
-        'link' => ['https://laracasts.com', 'https://laracasts.com'],
+        'links' => ['https://laracasts.com', 'https://laracasts.com'],
     ]);
+    expect($idea->steps) ->toHaveCount(2);
 
 });
