@@ -9,8 +9,7 @@
         <textarea
             name="{{ $name }}"
             id="{{ $name }}"
-            class="textarea"
-            {{ $attributes }}
+            {{ $attributes->merge(['class' => 'textarea']) }}
         >{{ old($name, $value) }}</textarea>
     @else
         <input
@@ -18,8 +17,7 @@
             id="{{ $name }}"
             name="{{ $name }}"
             value="{{ old($name, $value) }}"
-            class="input"
-            {{ $attributes }}>
+            {{ $attributes->merge(['class' => 'input']) }}>
     @endif
 
     <x-form.error name="{{ $name }}" />

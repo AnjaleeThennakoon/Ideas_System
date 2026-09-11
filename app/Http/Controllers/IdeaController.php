@@ -50,7 +50,7 @@ class IdeaController extends Controller
 
         $action->handle($request->safe()->all());
 
-        return to_route('idea.index')->with('success', 'Idea created!');
+        return to_route('idea.index')->with('success', 'idea created!');
     }
 
     /**
@@ -98,7 +98,7 @@ class IdeaController extends Controller
             );
         });
 
-        return to_route('idea.show', $idea)->with('success', 'Idea updated!');
+        return to_route('idea.show', $idea)->with('success', 'idea updated!');
 
     }
 

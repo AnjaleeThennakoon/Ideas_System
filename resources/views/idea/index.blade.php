@@ -59,7 +59,7 @@
             </div>
         </div>
 
-    <x-idea.model :idea="new App\Models\Idea" />
+    <x-idea.form :idea="new App\Models\Idea" />
 
     </div>
 </x-layout>
