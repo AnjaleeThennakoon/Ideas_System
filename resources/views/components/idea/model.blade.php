@@ -3,7 +3,7 @@
 <x-modal name="{{ $idea->exists ? 'edit-idea' : 'create-idea' }}" title="{{ $idea->exists ? 'Edit Idea' : 'New Idea' }}">
     <form
         x-data="{
-            status: 'pending',
+            status: @js(old('status',$idea->status->value)),
             newLink: '',
             links: [],
             newStep: '',
@@ -22,6 +22,7 @@
                 placeholder="Enter an idea for you title"
                 autofocus
                 required
+                value="$idea->title"
             />
 
             {{--Status cases 3--}}
@@ -33,7 +34,7 @@
                                 x-on:click="status = '{{ $status->value }}'"
                                 data-test="button-status-{{ $status->value }}"
                                 class ="btn flex-1 h-10"
-                                :class="status === @js($status->value) ? '' : 'btn-outlined'">
+                                :class="{'btn-outlined': status !== @js($status->value)} ">
                             {{ $status->label() }}
                         </button>
                     @endforeach
@@ -48,11 +49,22 @@
                 name="description"
                 type="textarea"
                 placeholder="Enter an idea for you idea..."
+                :value="$idea->description"
             />
 
             {{--choose file--}}
             <div class="space-y-2">
                 <label for="image" class="label">Featured Image</label>
+                @if($idea->image_path)
+                    <div class="mb-4 mx-4 mt-4 overflow-hidden rounded-t-lg">
+                        <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}"
+                             class="h-48 w-full object-cover rounded-lg">
+                        <button type="button" class="btn btn-outlined h-10 w-full" form="delete-image-form">Remove Image </button>
+
+
+                    </div>
+
+                @endif
                 <input type="file" name="image" accept="image/*">
                 <x-form.error name="image"/>
 
@@ -151,5 +163,12 @@
             </div>
 
         </div>
+    </form>
+    @if($idea->image_path)
+        <form method="POST" action="{{ route('idea.image.destroy',$idea) }}" id="delete-image-form">
+            @csrf
+            @method('DELETE')
+
+            @endif
     </form>
 </x-modal>
