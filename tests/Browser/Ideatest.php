@@ -1,12 +1,15 @@
 <?php
 
 use App\Models\Idea;
+use App\Models\IdeaStatus;
 use App\Models\User;
 
-it('create a new idea', function () {
-    $this->actingAs($user = User::factory()->create());   // create user and authenticate
+// ─────────────────────────────────────────────
+// TEST 1: Create a new idea
+// ─────────────────────────────────────────────
+it('creates a new idea', function () {
+    $this->actingAs($user = User::factory()->create());
 
-    // create idea
     visit('/ideas')
         ->click('@create-idea-button')
         ->fill('title', 'Some Example Title')
@@ -16,35 +19,46 @@ it('create a new idea', function () {
         ->click('@submit-new-link-button')
         ->fill('@new-link', 'https://laravel.com')
         ->click('@submit-new-link-button')
-        ->fill('@new-step', 'Do a Thnig')
+        ->fill('@new-step', 'Do a Thing')
         ->click('@submit-new-step-button')
-        ->click('@new-step','Do another Thing')
+        ->fill('@new-step', 'Do another Thing')
         ->click('@submit-new-step-button')
-        //push the test and run browser
-//        ->debug()
-        ->click('Create')
-        // check after submitting redirect /ideas page
+        ->click('@submit-idea')
         ->assertPathIs('/ideas');
 
-    // Test - Match the first idea ?
-    expect($idea = $user->ideas()->first())->toMatchArray([
-        'title' => 'Some Example Title',
-        'status' => 'Completed',
-        'description' => 'An example description',
-        'links' => ['https://laracasts.com', 'https://laracasts.com'],
-    ]);
-    expect($idea->steps) ->toHaveCount(2);
+    $idea = $user->ideas()->first();
 
+    expect($idea)->not->toBeNull();
+    expect($idea)->toMatchArray([
+        'title'       => 'Some Example Title',
+        'description' => 'An example description',
+    ]);
+    expect($idea->status)->toBe(IdeaStatus::COMPLETED);
+    expect($idea->links)->toBe(['https://laracasts.com', 'https://laravel.com']);
+    expect($idea->steps)->toHaveCount(2);
 });
 
+// ─────────────────────────────────────────────
+// TEST 2: Edit an existing idea
+// ─────────────────────────────────────────────
+it('edits an existing idea', function () {
+    $this->actingAs($user = User::factory()->create());
 
-it('edits an axisting new idea', function () {
-    $this->actingAs($user = User::factory()->create());   // create user and authenticate
-    $Idea = Idea::factory()->for($user)->create();
+    // Create an idea with steps for this user
+    $idea = Idea::factory()->for($user)->create([
+        'title'       => 'Original Title',
+        'description' => 'Original description',
+        'status'      => IdeaStatus::PENDING,
+    ]);
 
-    visit('/idea.show', $Idea)
-        ->click('@create-idea-button')
-        ->debug()
+    $idea->steps()->createMany([
+        ['description' => 'Original step 1'],
+        ['description' => 'Original step 2'],
+    ]);
+
+    // Visit show page and open edit modal
+    visit("/ideas/{$idea->id}")
+        ->click('@edit-idea-button')
         ->fill('title', 'Some Example Title')
         ->click('@button-status-completed')
         ->fill('description', 'An example description')
@@ -52,23 +66,20 @@ it('edits an axisting new idea', function () {
         ->click('@submit-new-link-button')
         ->fill('@new-link', 'https://laravel.com')
         ->click('@submit-new-link-button')
-        ->fill('@new-step', 'Do a Thnig')
+        ->fill('@new-step', 'Do a Thing')
         ->click('@submit-new-step-button')
-        ->click('@new-step','Do another Thing')
+        ->fill('@new-step', 'Do another Thing')
         ->click('@submit-new-step-button')
-        //push the test and run browser
-//        ->debug()
-        ->click('Create')
-        // check after submitting redirect /ideas page
-        ->assertPathIs('/ideas');
+        ->click('@submit-idea')
+        ->assertPathIs("/ideas/{$idea->id}");
 
-//    // Test - Match the first idea ?
-    expect($idea = $user->ideas()->first())->toMatchArray([
-        'title' => 'Some Example Title',
-        'status' => 'Completed',
+    $idea->refresh();
+
+    expect($idea)->toMatchArray([
+        'title'       => 'Some Example Title',
         'description' => 'An example description',
-        'links' => ['https://laracasts.com', 'https://laracasts.com'],
     ]);
-    expect($idea->steps) ->toHaveCount(2);
-
+    expect($idea->status)->toBe(IdeaStatus::COMPLETED);
+    expect($idea->links)->toBe(['https://laracasts.com', 'https://laravel.com']);
+    expect($idea->steps)->toHaveCount(2);
 });
