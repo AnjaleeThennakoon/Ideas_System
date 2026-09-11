@@ -17,29 +17,26 @@ class Idea extends Model
     use HasFactory;
 
     protected $casts = [
-        'links' => 'array',
-        'status' => IdeaStatus::class,   // do Enum status in db
+        'links'  => 'array',
+        'status' => IdeaStatus::class,
     ];
 
     protected $attributes = [
-        'status' => IdeaStatus::PENDING->value,
+        'status' => IdeaStatus::PENDING,   // ← Enum instance
     ];
 
     public static function statusCounts(User $user): Collection
     {
-
-        $Counts = $user->ideas()
-            ->selectRaw('status,count(*)as count')
+        $counts = $user->ideas()
+            ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status');
 
         return collect(IdeaStatus::cases())
             ->mapWithKeys(fn ($status) => [
-                $status->value => $Counts->get($status->value, 0),
+                $status->value => $counts->get($status->value, 0),
             ])
-
             ->put('all', $user->ideas()->count());
-
     }
 
     public function user(): BelongsTo
@@ -49,6 +46,6 @@ class Idea extends Model
 
     public function steps(): HasMany
     {
-        return $this->hasmany(Step::class);
+        return $this->hasMany(Step::class);   // ← capital M
     }
 }

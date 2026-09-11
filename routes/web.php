@@ -17,7 +17,7 @@ Route::get('/ideas/{idea}', [IdeaController::class, 'show'])
 //    check permission through policy or Gate
     ->can('workWith', 'idea');
 
-
+Route::put('/ideas/{idea}', [IdeaController::class, 'update'])->name('idea.update');
 Route::patch('/steps/{step}', [StepController::class, 'update'])->name('step.update')->middleware('auth','can:workWith.idea');
 
 Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('idea.show')->middleware('auth');
