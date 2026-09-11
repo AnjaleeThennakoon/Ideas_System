@@ -1,4 +1,4 @@
-@props(['label' => false , 'name'  , 'type' =>'text', 'value'=> ''])
+@props(['label' , 'name'  , 'type' =>'text'])
 
 <div class="space-y-2">
     @if($label)
@@ -12,20 +12,20 @@
             class="textarea "
             {{ $attributes }}
         >
-            {{ old($name, $value) }} </textarea>
-
-    @else
+            {{ old($name) }}
+        </textarea>
+        @else
         <input
-        type="{{ $type }}"
-        id="{{ $name }}"
-        name="{{ $name }}"
-        value="{{ old($name, $value) }}"
-        class="input"
-        {{ $attributes }}>
+            type="{{ $type }}"
+            id="{{ $name }}"
+            name="{{ $name }}"
+            value="{{ old($name) }}"
+            class="input"
+            {{ $attributes }}>
+        @endif
 
-    @endif
+        <x-form.error name="{{ $name }}" />
 
 
 
-<x-form.error name="{{ $name }}"/>
 </div>
