@@ -103,7 +103,7 @@
                 </div>
             </div>
         @endif
-        <x-idea.model :idea="$idea" />
+        <x-idea.form :idea="$idea" />
 
     </div>
 </x-layout>

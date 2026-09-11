@@ -2,7 +2,7 @@
 
 <x-modal
     name="{{ $idea->exists ? 'edit-idea' : 'create-idea' }}"
-    title="{{ $idea->exists ? 'Edit Idea' : 'New Idea' }}"
+    title="{{ $idea->exists ? 'Edit idea' : 'New idea' }}"
 >
     <form
         x-data="{
