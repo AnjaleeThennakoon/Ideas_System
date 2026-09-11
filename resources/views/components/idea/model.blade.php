@@ -3,18 +3,21 @@
 <x-modal name="{{ $idea->exists ? 'edit-idea' : 'create-idea' }}" title="{{ $idea->exists ? 'Edit Idea' : 'New Idea' }}">
     <form
         x-data="{
-            status: 'pending',
+            status: @js(old('status', $idea->status?->value ?? 'pending')),
             newLink: '',
-            links: [],
+            links: @js(old('links', $idea->links ?? [])),
             newStep: '',
-            steps: []
+            steps: @js(old('steps', $idea->steps->pluck('description')->all()))
         }"
         method="POST"
-        action="{{ route('idea.store') }}"
+        action="{{ $idea->exists ? route('idea.update', $idea) : route('idea.store') }}"
         enctype="multipart/form-data" >
 
 
     @csrf
+    @if($idea->exists)
+        @method('PATCH')
+    @endif
         <div class="space-y-6  ">
             <x-form.field
                 label="Title"
@@ -22,6 +25,7 @@
                 placeholder="Enter an idea for you title"
                 autofocus
                 required
+                :value="$idea->title"
             />
 
             {{--Status cases 3--}}
@@ -33,7 +37,7 @@
                                 x-on:click="status = '{{ $status->value }}'"
                                 data-test="button-status-{{ $status->value }}"
                                 class ="btn flex-1 h-10"
-                                :class="status === @js($status->value) ? '' : 'btn-outlined'">
+                                :class="{'btn-outlined': status !== @js($status->value)} ">
                             {{ $status->label() }}
                         </button>
                     @endforeach
@@ -48,11 +52,19 @@
                 name="description"
                 type="textarea"
                 placeholder="Enter an idea for you idea..."
+                :value="$idea->description"
             />
 
             {{--choose file--}}
             <div class="space-y-2">
                 <label for="image" class="label">Featured Image</label>
+                @if($idea->image_path)
+                    <div class="mb-4 mx-4 mt-4 overflow-hidden rounded-t-lg">
+                        <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}"
+                             class="h-48 w-full object-cover rounded-lg">
+                    </div>
+
+                @endif
                 <input type="file" name="image" accept="image/*">
                 <x-form.error name="image"/>
 
@@ -144,9 +156,8 @@
             </div>
 
             <div class="flex justify-end gap-x-5">
-                <button type="button" x-on:click="$dispatch('close-model')">Cancel </button>
-                <button type="submit" class="btn"
-                >Create </button>
+                <button type="button" x-on:click="$dispatch('close-modal')">Cancel</button>
+                <button type="submit" class="btn">{{ $idea->exists ? 'Update' : 'Create' }}</button>
 
             </div>
 

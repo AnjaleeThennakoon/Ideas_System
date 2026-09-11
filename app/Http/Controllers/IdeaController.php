@@ -7,10 +7,10 @@ use App\Http\Requests\StoreideaRequest;
 use App\Http\Requests\UpdateideaRequest;
 use App\Models\Idea;
 use App\Models\IdeaStatus;
-use Illuminate\Support\Facades\Gate;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class IdeaController extends Controller
 {
@@ -45,11 +45,11 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreideaRequest $request,CreateIdea $action)
-
+    public function store(StoreideaRequest $request, CreateIdea $action)
     {
 
         $action->handle($request->safe()->all());
+
         return to_route('idea.index')->with('success', 'Idea created!');
     }
 
@@ -80,6 +80,25 @@ class IdeaController extends Controller
     {
         Gate::authorize('workWith', $idea);
 
+        $data = $request->validated();
+        $steps = $data['steps'] ?? [];
+        unset($data['steps'], $data['image']);
+
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('ideas', 'public');
+        }
+
+        DB::transaction(function () use ($idea, $data, $steps): void {
+            $idea->update($data);
+            $idea->steps()->delete();
+            $idea->steps()->createMany(
+                collect($steps)
+                    ->map(fn (string $description): array => ['description' => $description])
+                    ->all()
+            );
+        });
+
+        return to_route('idea.show', $idea)->with('success', 'Idea updated!');
     }
 
     /**
