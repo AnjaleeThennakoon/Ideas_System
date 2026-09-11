@@ -10,7 +10,7 @@
             newLink: '',
             links: {{ Js::from(old('links', $idea->links ?? [])) }},
             newStep: '',
-            steps: {{ Js::from(old('steps', $idea->steps->pluck('description')->all())) }}
+            steps: {{ Js::from(old('steps', $idea->steps ?? [])) }}
         }"
         method="POST"
         action="{{ $idea->exists ? route('idea.update', $idea) : route('idea.store') }}"
@@ -26,7 +26,6 @@
             <x-form.field
                 label="Title"
                 name="title"
-                dusk="title"
                 placeholder="Enter a title for your idea"
                 :value="old('title', $idea->title ?? '')"
                 autofocus
@@ -41,7 +40,7 @@
                         <button
                             type="button"
                             x-on:click="status = '{{ $status->value }}'"
-                            dusk="button-status-{{ $status->value }}"
+                            data-test="button-status-{{ $status->value }}"
                             class="btn flex-1 h-10"
                             :class="status === '{{ $status->value }}' ? '' : 'btn-outlined'"
                         >
@@ -58,7 +57,6 @@
                 label="Description"
                 name="description"
                 type="textarea"
-                dusk="description"
                 placeholder="Enter a description for your idea..."
                 :value="old('description', $idea->description ?? '')"
             />
@@ -68,55 +66,15 @@
                 <label for="image" class="label">Featured Image</label>
 
                 @if($idea->exists && $idea->image_path)
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <img src="{{ Storage::url($idea->image_path) }}"
                              alt="Current image"
-                             class="w-32 h-32 object-cover rounded-lg border border-gray-700">
-                        <p class="text-xs text-gray-500 mt-1">Current image</p>
+                             class="w-32 h-32 object-cover rounded">
+                        <p class="text-sm text-gray-500">Current image</p>
                     </div>
                 @endif
 
-                <div x-data="{ fileName: '', previewUrl: null }" class="space-y-3">
-                    <input
-                        type="file"
-                        name="image"
-                        id="image"
-                        accept="image/*"
-                        class="hidden"
-                        x-ref="fileInput"
-                        dusk="image-input"
-                        @change="
-                            const file = $event.target.files[0];
-                            fileName = file?.name ?? '';
-                            previewUrl = file ? URL.createObjectURL(file) : null;
-                        "
-                    >
-
-                    <div class="flex items-center gap-3">
-                        <button
-                            type="button"
-                            @click="$refs.fileInput.click()"
-                            class="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-black font-semibold transition"
-                        >
-                            Choose File
-                        </button>
-
-                        <span
-                            class="text-sm text-gray-400 truncate max-w-xs"
-                            x-text="fileName || 'No file chosen'"
-                        ></span>
-                    </div>
-
-                    <template x-if="previewUrl">
-                        <div>
-                            <img :src="previewUrl"
-                                 alt="Preview"
-                                 class="w-32 h-32 object-cover rounded-lg border border-gray-700">
-                            <p class="text-xs text-gray-500 mt-1">New image preview</p>
-                        </div>
-                    </template>
-                </div>
-
+                <input type="file" name="image" accept="image/*">
                 <x-form.error name="image"/>
             </div>
 
@@ -128,7 +86,6 @@
                     <template x-for="(step, index) in steps" :key="index">
                         <div class="flex gap-x-2 items-center">
                             <input name="steps[]" x-model="steps[index]" class="input">
-
                             <button
                                 type="button"
                                 aria-label="Remove step"
