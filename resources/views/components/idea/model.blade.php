@@ -3,7 +3,7 @@
 <x-modal name="{{ $idea->exists ? 'edit-idea' : 'create-idea' }}" title="{{ $idea->exists ? 'Edit Idea' : 'New Idea' }}">
     <form
         x-data="{
-            status: 'pending',
+            status: @js(old($idea->status->value)),
             newLink: '',
             links: [],
             newStep: '',
