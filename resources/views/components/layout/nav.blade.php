@@ -3,12 +3,13 @@
         <div class=" max-w-7xl mx-auto h-16 flex items-center justify-between">
             <div>
                 <a href="/">
-                    <img src="/images/image.jpg" alt="" width="100" alt="idea logo">
+                    <img src="/images/logo1.jpeg" alt="" width="100" alt="idea logo">
                 </a>
             </div>
 
             <div class="flex gap-x-5">
                 @auth
+                    <a href="{{ route('profile.edit') }}">Edit profile </a>
                     <form method="POST" action="/logout">
                         @csrf
                         <button type="submit">Log Out</button>

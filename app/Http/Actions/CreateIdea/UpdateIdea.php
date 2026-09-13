@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateIdea
 {
-    public function handle(array $attributes, Idea $idea)
+    public function handle(array $attributes, Idea $idea):void
     {
 
         $data = collect($attributes)->only([
@@ -20,9 +20,9 @@ class UpdateIdea
 
         DB::transaction(function () use ($idea, $data, $attributes) {
             $idea->update($data);
-            $idea->steps()->delete();
-
-            $idea->steps()->createMany($CreateMany($attributes['steps'] ?? []));
+//            $idea->steps()->delete();
+//
+//            $idea->steps()->createMany($CreateMany($attributes['steps'] ?? []));
         });
 
     }

@@ -17,7 +17,7 @@
             id="{{ $name }}"
             name="{{ $name }}"
             value="{{ old($name, $value) }}"
-            {{ $attributes->merge(['class' => 'input']) }}>
+            {{ $attributes->merge(['class' => 'input w-flull']) }}>
     @endif
 
     <x-form.error name="{{ $name }}" />

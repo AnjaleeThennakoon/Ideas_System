@@ -10,7 +10,7 @@
             newLink: '',
             links: {{ Js::from(old('links', $idea->links ?? [])) }},
             newStep: '',
-            steps: {{ Js::from(old('steps', $idea->steps ?? [])) }}
+            steps: {{ Js::from(old('steps', $idea->steps->pluck('description')->all())) }}
         }"
         method="POST"
         action="{{ $idea->exists ? route('idea.update', $idea) : route('idea.store') }}"
@@ -26,6 +26,7 @@
             <x-form.field
                 label="Title"
                 name="title"
+                dusk="title"
                 placeholder="Enter a title for your idea"
                 :value="old('title', $idea->title ?? '')"
                 autofocus
@@ -40,7 +41,7 @@
                         <button
                             type="button"
                             x-on:click="status = '{{ $status->value }}'"
-                            data-test="button-status-{{ $status->value }}"
+                            dusk="button-status-{{ $status->value }}"
                             class="btn flex-1 h-10"
                             :class="status === '{{ $status->value }}' ? '' : 'btn-outlined'"
                         >
@@ -56,6 +57,7 @@
             <x-form.field
                 label="Description"
                 name="description"
+                dusk="description"
                 type="textarea"
                 placeholder="Enter a description for your idea..."
                 :value="old('description', $idea->description ?? '')"
@@ -83,7 +85,7 @@
                 <fieldset class="space-y-3">
                     <legend class="label">Actionable Steps</legend>
 
-                    <template x-for="(step, index) in steps" :key="index">
+                    <template x-for="(step, index) in steps" :key="step.id || index">
                         <div class="flex gap-x-2 items-center">
                             <input name="steps[]" x-model="steps[index]" class="input">
                             <button
